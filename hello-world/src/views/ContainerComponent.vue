@@ -119,6 +119,21 @@ export default {
     empty() {
       return !!this.text__empty;
     },
+    allUsers() {
+      return this.$store.getters.allUsers;
+    },
+    // currentUser() {
+    //   return this.$store.getters.currentUser
+    // },
+    // tags() {
+    //   return this.$store.getters.tags
+    // },
+    // tasks() {
+    //   return this.$store.getters.userTasks
+    // },
+    // name() {
+    //   return this.$store.getters.username
+    // }
   },
   methods: {
     pushTask(data) {
@@ -243,7 +258,13 @@ export default {
       }
     },
   },
-  mounted: function () {},
+  async mounted() {
+    this.$store.dispatch("fetchUsers");
+    // this.$store.dispatch("fetchUser");
+    // this.$store.dispatch("fetchUsername");
+    // this.$store.dispatch("fetchUserTags");
+    // this.$store.dispatch("fetchUserTasks");
+  },
 };
 </script>
 
@@ -330,9 +351,8 @@ export default {
     }
     @media screen and(max-width: 475px) {
       width: 30px;
-      height:30px;
+      height: 30px;
       &__logout {
-
         &-img {
           width: 30px;
           height: 30px;
@@ -340,10 +360,9 @@ export default {
       }
     }
     @media screen and(max-width: 320px) {
-width: 20px;
-      height:20px;
+      width: 20px;
+      height: 20px;
       &__logout {
-
         &-img {
           width: 20px;
           height: 20px;
@@ -391,13 +410,12 @@ width: 20px;
             font-size: 20px;
           }
         }
-         @media screen and (max-width: 600px) {
+        @media screen and (max-width: 600px) {
           width: 200px;
           height: 50px;
           font-size: 20px;
-         
         }
-         @media screen and (max-width: 475px) {
+        @media screen and (max-width: 475px) {
           width: 200px;
           height: 30px;
           font-size: 15px;
@@ -410,11 +428,9 @@ width: 20px;
             font-size: 12px;
           }
         }
+      }
+    }
 
-      }
-     
-      }
-    
     &__buttons {
       display: flex;
       width: 70px;
@@ -494,5 +510,4 @@ width: 20px;
     margin: auto 0;
   }
 }
-
 </style>

@@ -11,7 +11,7 @@ Vue.use(Vuex)
 
 new Vue({
   el: '#app',
-   router, store
+   router, store,
   render: h => h(App)
 })
 
