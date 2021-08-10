@@ -1,0 +1,73 @@
+[
+  {
+    "id": 0,
+    "login": "Jack",
+    "password": 123,
+    "tags": [
+      {
+        "id": 0,
+        "tagName": "sport",
+        "color": "#CD5C5C"
+      },
+      {
+        "id": 1,
+        "tagName": "pets",
+        "color": "#ADFF2F"
+      }
+    ],
+    "tasks": [
+      {
+        "taskName": "running 4 km with Bobik",
+        "tags": [
+          {
+            "id": 0,
+            "tagName": "sport",
+            "color": "#CD5C5C"
+          },
+          {
+            "id": 1,
+            "tagName": "pets",
+            "color": "#ADFF2F"
+          }
+        ],
+        "flag": false
+      }
+    ]
+  },
+  {
+    "id": 0,
+    "login": "Mirella",
+    "password": 1234,
+    "tags": [
+      {
+        "id": 0,
+        "tagName": "beauty",
+        "color": "#8B0000"
+      }
+    ],
+    "tasks": [
+      {
+        "taskName": "make up",
+        "tags": [
+          {
+            "id": 0,
+            "tagName": "beauty",
+            "color": "#8B0000"
+          }
+        ],
+        "flag": true
+      },
+      {
+        "taskName": "buy cosmetics",
+        "tags": [
+          {
+            "id": 0,
+            "tagName": "beauty",
+            "color": "#8B0000"
+          }
+        ],
+        "flag": false
+      }
+    ]
+  }
+]

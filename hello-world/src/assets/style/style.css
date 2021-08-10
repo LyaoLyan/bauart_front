@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'Chronica Pro ';
+    src: local('Chronica Pro  Light'), local('Chronica-Pro--Light'),
+        url('../fonts/ChronicaPro-Light.woff2') format('woff2'),
+        url('../fonts/ChronicaPro-Light.woff') format('woff'),
+        url('../fonts/ChronicaPro-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+  }
+
+* {
+    font-family: "Chronica Pro ", sans-serif;
+}
+button {
+    font-family: "Chronica Pro ", sans-serif;
+}
