@@ -11,7 +11,7 @@
       <div class="tag__color">
         <div class="tag__color-title">Color</div>
         <div class="tag__color-colors">
-          <div class="tag__color-colors-show" :class="{ ' showAll': show }">
+          <div class="tag__color-colors-show" :class="{ 'showAll': show }">
             <!-- <input type="radio" id="contactChoice1"
      name="circle" :value> -->
             <!-- задействовать радиобаттоны для выбора цвета -->
@@ -75,7 +75,7 @@ export default {
     },
     createModal() {
       let idNewTag;
-      if (Boolean(this.tags.length)) {
+      if (this.tags.length !=0) {
         idNewTag = this.tags[this.tags.length - 1].id + 1;
       } else {
         idNewTag = 0;

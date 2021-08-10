@@ -4,13 +4,14 @@ import App from './App.vue'
 import users from './assets/users.json'
 import router from './router/router.js'
 import colors from './assets/colors.json'
+import store from './store/index.js'
 
 Vue.use(Vuex)
 
 
 new Vue({
   el: '#app',
-   router, 
+   router, store
   render: h => h(App)
 })
 
