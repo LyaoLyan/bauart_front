@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="container__tag"
-    :class="{ container__tag_active: isActive }"
-  >
+  <div class="container__tag" :class="{ container__tag_active: isActive }">
     <div v-on:click="chooseTag">
       <tag-component :tag="tag" :isDisable="isDisable" />
     </div>
@@ -35,6 +32,7 @@
 
 <script>
 import TagComponent from "./TagComponent.vue";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   components: { TagComponent },
   name: "PicktagComponent",
@@ -43,7 +41,6 @@ export default {
       isDisable: true,
       col: this.tag.color,
       isEdit: true,
-      oldTag: JSON.parse(localStorage.getItem("currentUser")).tags[this.tag.id],
       isEdited: true,
     };
   },
@@ -51,13 +48,18 @@ export default {
     tag: Object,
     choosenTag: Array,
   },
-  mounted: function () {},
+  async mounted() {
+    this.fetchOldTag(this.tag);
+  },
   computed: {
+    ...mapGetters(["getOldTag"]),
     isActive() {
       return !!this.choosenTag.find((item) => item.id === this.tag.id);
     },
   },
   methods: {
+    ...mapMutations([]),
+    ...mapActions(["fetchOldTag"]),
     editTag() {
       this.isDisable = false;
       this.isEdit = false;
@@ -79,7 +81,7 @@ export default {
       this.isDisable = true;
       this.isEdited = true;
       this.$emit("cancelTag", {
-        tag: this.oldTag,
+        tag: this.getOldTag,
         isEdited: this.isEdited,
       });
       this.isEdit = true;

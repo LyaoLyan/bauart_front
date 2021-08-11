@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "app",
   data() {
@@ -83,7 +84,6 @@ export default {
       path: "",
       flag: false,
       f: false,
-      users: [],
       regUsername: "",
       regPassword: "",
       regRepeatPassword: "",
@@ -92,12 +92,20 @@ export default {
       password: "",
     };
   },
+  computed: {
+    ...mapGetters(["getUsers", "getUser"]),
+  },
   methods: {
+    ...mapActions(["fetchUsers"]),
+    ...mapMutations(["addUsers", "setUser"]),
     checkUser(n, p) {
       let i = 0;
-      this.users.forEach((element) => {
+      // console.log(this.getUsers);
+      this.getUsers.forEach((element) => {
         if (element.login == n && element.password == p) {
-          localStorage.setItem("currentUser", JSON.stringify(this.users[i]));
+          this.setUser(this.getUsers[i]);
+          //localStorage.setItem("currentUser", JSON.stringify(this.users[i]));
+          console.log(this.getUsers);
           this.$router.push({ path: "container" });
         } else {
           this.f = true;
@@ -106,7 +114,7 @@ export default {
       });
     },
     checkRegister() {
-      this.users.forEach((element) => {
+      this.getUsers.forEach((element) => {
         if (
           element.login == this.regUsername ||
           this.regPassword == "" ||
@@ -121,15 +129,20 @@ export default {
             tags: [],
             tasks: [],
           };
-          this.users.push(newUser);
-          localStorage.setItem("users", JSON.stringify(this.users));
-          this.checkUser(this.regUsername, this.regPassword)
+          this.addUsers(newUser);
+
+          // localStorage.setItem("users", JSON.stringify(this.users));
+
+          this.checkUser(this.regUsername, this.regPassword);
         }
       });
     },
   },
   created: function () {
-    this.users = JSON.parse(localStorage.getItem("users"));
+    // this.users = JSON.parse(localStorage.getItem("users"));
+  },
+  async mounted() {
+    this.fetchUsers();
   },
 };
 </script>

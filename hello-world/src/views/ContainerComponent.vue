@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="login">
-        <div class="login__username">{{ username }}</div>
+        <div class="login__username">{{ getUsername }}</div>
         <div class="login__logout">
           <p class="login__logout-container" v-on:click="logout()">
             <router-link class="login__logout-button" tag="button" to=""
@@ -36,7 +36,7 @@
           <div class="tag-pick" v-show="Boolean(this.opened)">
             <!-- как зареактивить изменение хэштегов везде -->
             <pick-tag-component
-              v-for="tag in user.tags"
+              v-for="tag in getTags"
               :tag="tag"
               :key="tag.id"
               :choosen-tag="choosenTag"
@@ -55,8 +55,8 @@
             <create-tag-component
               @closeModal="closeModal"
               @createTag="createTag"
-              :colors="colors"
-              :tags="userTags"
+              :tags="getTags"
+              :colors="getColors"
             ></create-tag-component>
           </div>
         </div>
@@ -72,7 +72,7 @@
     <div class="task__container">
       <task-component
         class="task"
-        v-for="(task, index) in user.tasks"
+        v-for="(task, index) in getTasks"
         :task="task"
         :key="index"
         :index="index"
@@ -90,6 +90,8 @@ import TagsComponent from "../components/TagsComponent.vue";
 import PickTagComponent from "../components/PickTagComponent.vue";
 import TaskComponent from "../components/TaskComponent.vue";
 import CreateTagComponent from "../components/CreateTagComponent.vue";
+
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "container",
   components: {
@@ -100,17 +102,11 @@ export default {
   },
   data() {
     return {
-      user: JSON.parse(localStorage.getItem("currentUser")),
-      userTags: JSON.parse(localStorage.getItem("currentUser")).tags,
-      userTasks: JSON.parse(localStorage.getItem("currentUser")).tasks,
-      username: JSON.parse(localStorage.getItem("currentUser")).login,
-      users: JSON.parse(localStorage.getItem("users")),
       opened: false,
       choosenTag: [],
       toCreate: false,
       task: "",
       text__empty: false,
-      colors: JSON.parse(localStorage.getItem("colors")),
       isEdited: true,
     };
   },
@@ -119,9 +115,15 @@ export default {
     empty() {
       return !!this.text__empty;
     },
-    allUsers() {
-      return this.$store.getters.allUsers;
-    },
+    ...mapGetters([
+      "getUsers",
+      "getUser",
+      "getUsername",
+      "getId",
+      "getTags",
+      "getTasks",
+      "getColors"
+    ]),
     // currentUser() {
     //   return this.$store.getters.currentUser
     // },
@@ -136,15 +138,28 @@ export default {
     // }
   },
   methods: {
+    ...mapActions(["fetchUsers", "fetchColors"]),
+    ...mapMutations([
+      "updateUsers",
+      "setUser",
+      "updateTask",
+      "deleteTask",
+      "updateTag",
+      "deleteTag",
+      "clearTagsFromTasks",
+      "changeTagsFromTasks",
+      "updateTaskFlag"
+    ]),
     pushTask(data) {
-      this.userTasks.splice(data.index, 1, data.task);
-      this.user.tasks = this.userTasks;
-      localStorage.setItem("currentUser", JSON.stringify(this.user));
+      this.updateTask(data.index, data.task);
+      // this.user.tasks = this.userTasks;
+      // this.setUser(this.user);
     },
     delTask(data) {
-      this.userTasks.splice(data.delTask, 1);
-      this.user.tasks = this.userTasks;
-      localStorage.setItem("currentUser", JSON.stringify(this.user));
+      this.deleteTask(data.delTask);
+      // this.userTasks.splice(data.delTask, 1);
+      // this.user.tasks = this.userTasks;
+      // this.setUser(this.user);
     },
     addTask() {
       if (this.task) {
@@ -154,9 +169,9 @@ export default {
           tags: Object.values(this.choosenTag).map((i) => i),
           flag: false,
         };
-        this.userTasks.push(obj);
-        this.user.tasks = this.userTasks;
-        localStorage.setItem("currentUser", JSON.stringify(this.user));
+        this.updateTask(this.getTasks.length - 1, obj);
+        // this.user.tasks = this.userTasks;
+        // this.setUser(this.user);
         this.task = "";
         this.choosenTag = [];
       } else {
@@ -168,55 +183,45 @@ export default {
       this.choosenTag = [];
     },
     cancelTask(data) {
-      this.userTasks.splice(data.index, 1, data.task);
-      this.user.tasks = this.userTasks;
-      localStorage.setItem("currentUser", JSON.stringify(this.user));
+      this.updateTask(data.index, data.task);
+      // this.user.tasks = this.userTasks;
+      // this.setUser(this.user);
     },
     createTag(data) {
-      this.userTags.push(data.tag);
-      this.user.tags = this.userTags;
-      localStorage.setItem("currentUser", JSON.stringify(this.user));
+      this.updateTag(this.getTags.length - 1, data.tag);
+      // this.user.tags = this.userTags;
+      // this.setUser(this.user);
     },
     editTag(data) {
       this.isEdited = data.isEdited;
     },
     cancelTag(data) {
-      this.userTags.splice(data.tag.id, 1, data.tag);
-      this.user.tags = this.userTags;
-      localStorage.setItem("currentUser", JSON.stringify(this.user));
+      this.updateTag(data.tag.id, data.tag);
+      // this.user.tags = this.userTags;
+      // this.setUser(this.user);
       this.isEdited = data.isEdited;
     },
     deleteTag(data) {
       function checkIndex(element) {
         return element.id == data.id;
       }
-      this.userTags.splice(this.userTags.findIndex(checkIndex), 1);
-      this.userTasks = this.userTasks.map(function (task) {
-        if (task.tags[task.tags.findIndex(checkIndex)]) {
-          task.tags.splice(task.tags.findIndex(checkIndex), 1);
-          return task;
-        }
-        return task;
-      });
-      this.user.tasks = this.userTasks;
-      this.user.tags = this.userTags;
-      localStorage.setItem("currentUser", JSON.stringify(this.user));
+      this.deleteTag(this.getTags.findIndex(checkIndex));
+
+      this.clearTagsFromTasks(checkIndex);
+      // this.user.tasks = this.userTasks;
+      // this.user.tags = this.userTags;
+      // this.setUser(this.user);
     },
     pushTag(data) {
       function checkIndex(element) {
         return element.id == data.tag.id;
       }
-      this.userTags.splice(this.userTags.findIndex(checkIndex), 1, data.tag);
-      this.userTasks = this.userTasks.map(function (task) {
-        if (task.tags[task.tags.findIndex(checkIndex)]) {
-          task.tags[task.tags.findIndex(checkIndex)] = data.tag;
-          return task;
-        }
-        return task;
-      });
-      this.user.tasks = this.userTasks;
-      this.user.tags = this.userTags;
-      localStorage.setItem("currentUser", JSON.stringify(this.user));
+      this.updateTag(this.getTags.findIndex(checkIndex), data.tag);
+      this.clearTagsFromTasks(checkIndex, data.tag);
+
+      // this.user.tasks = this.userTasks;
+      // this.user.tags = this.userTags;
+      // this.setUser(this.user);
       this.isEdited = data.isEdited;
     },
     chooseTag(data) {
@@ -232,14 +237,13 @@ export default {
       this.toCreate = false;
     },
     checked(data) {
-      this.user.tasks[data.taskID].flag = data.flag;
-      localStorage.setItem("currentUser", JSON.stringify(this.user));
+      console.log(this.getTasks);
+      this.updateTaskFlag(data.taskID, data.flag);
+      // this.setUser(this.user);
     },
     logout() {
-      localStorage.setItem("firstLoadDone", false);
-      this.users.splice(this.user.id, 1, this.user);
-      localStorage.setItem("users", JSON.stringify(this.users));
-      localStorage.setItem("currentUser", "");
+      this.updateUsers(this.getUser);
+      this.setUser();
       this.$router.push({ path: "/" });
     },
     pickTag() {
@@ -259,11 +263,8 @@ export default {
     },
   },
   async mounted() {
-    this.$store.dispatch("fetchUsers");
-    // this.$store.dispatch("fetchUser");
-    // this.$store.dispatch("fetchUsername");
-    // this.$store.dispatch("fetchUserTags");
-    // this.$store.dispatch("fetchUserTasks");
+    this.fetchUsers();
+    this.fetchColors();
   },
 };
 </script>

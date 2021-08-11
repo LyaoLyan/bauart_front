@@ -1,25 +1,29 @@
+import colorsList from '../../assets/colors.json'
+
 export default {
     state: {
-        colors: {}
+        colors: []
     },
     mutations: {
-        updateUser(state, colors) {
+        setColors(state, colors) {
             state.colors = colors
         }
 
     },
     actions: {
-      
         async fetchColors(ctx) {
-            const res = await fetch(
-                localStorage.getItem("colors")
-            );
-            const colors = await res.json();
-            ctx.commit('updateColors', colors)
-        }
+            
+            const colors = colorsList
+            ctx.commit('setColors', colors)
+        },
+        // async fetchUCurrentUser(ctx) {
+        //     user = 
+        //     ctx.commit('setCurrentUser', user)
+        // }
+        
     },
     getters: {
-        colorsr(state) {
+        getColors(state) {
             return state.colors
         }
     }

@@ -1,24 +1,35 @@
+import usersList from '../../assets/users.json'
+
 export default {
     state: {
         users: []
     },
     mutations: {
-        updateUsers(state, users) {
+        setUsers(state, users) {
             state.users = users
+        },
+        updateUsers(state, user) {
+            state.users.splice(user.id, 1, user);
+        },
+        addUsers(state, user) {
+            state.users.push(user);
         }
+        
 
     },
     actions: {
         async fetchUsers(ctx) {
-            const res = await fetch(
-                localStorage.getItem("users")
-            );
-            const users = await res.json();
-            ctx.commit('updateUsers', users)
-        }
+            const users = usersList
+            ctx.commit('setUsers', users)
+        },
+        // async fetchUCurrentUser(ctx) {
+        //     user = 
+        //     ctx.commit('setCurrentUser', user)
+        // }
+        
     },
     getters: {
-        allUsers(state) {
+        getUsers(state) {
             return state.users
         }
     }
