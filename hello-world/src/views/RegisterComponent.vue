@@ -5,7 +5,7 @@
       <div>
         <form novalidate>
           <div class="reg__form">
-            <div>
+            <div class="reg__form-login">
               <input
                 type="login"
                 size="40"
@@ -13,7 +13,7 @@
                 v-model="regUsername"
               />
             </div>
-            <div>
+            <div class="reg__form-password">
               <input
                 type="password"
                 size="40"
@@ -21,7 +21,7 @@
                 v-model="regPassword"
               />
             </div>
-            <div>
+            <div class="reg__form-repeat">
               <input
                 type="password"
                 size="40"
@@ -43,7 +43,7 @@
       <div>
         <form novalidate>
           <div class="auth__form">
-            <div>
+            <div class="auth__form-login">
               <input
                 type="login"
                 size="40"
@@ -51,7 +51,7 @@
                 v-model="username"
               />
             </div>
-            <div>
+            <div  class="auth__form-password">
               <input
                 type="password"
                 size="40"
@@ -93,7 +93,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUsers", "getUser"]),
+    ...mapGetters(["getUsers", "getUser", "getNewId"]),
   },
   methods: {
     ...mapActions(["fetchUsers"]),
@@ -114,6 +114,7 @@ export default {
       });
     },
     checkRegister() {
+      let newUser;
       this.getUsers.forEach((element) => {
         if (
           element.login == this.regUsername ||
@@ -123,19 +124,20 @@ export default {
         ) {
           this.flag = true;
         } else {
-          let newUser = {
+          newUser = {
+            id: this.getNewId,
             login: this.regUsername,
             password: this.regPassword,
             tags: [],
             tasks: [],
           };
-          this.addUsers(newUser);
-
-          // localStorage.setItem("users", JSON.stringify(this.users));
-
-          this.checkUser(this.regUsername, this.regPassword);
+          this.flag = true;
         }
       });
+      if (this.flag) {
+        this.addUsers(newUser);
+        this.checkUser(this.regUsername, this.regPassword);
+      }
     },
   },
   created: function () {
@@ -150,7 +152,7 @@ export default {
 <style lang="scss" scoped>
 .border {
   width: 1px;
-  height: calc(100vh-10px);
+  height: 97vh;
 
   background: rgba(76, 77, 84, 1);
   opacity: 0.1;
@@ -179,7 +181,7 @@ export default {
       display: flex;
       flex-direction: column;
       align-items: center;
-      div {
+      &-login, &-password, &-repeat, .non-visible {
         margin-top: 30px;
         input {
           width: 345px;

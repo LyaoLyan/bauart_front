@@ -1,25 +1,35 @@
 export default {
     state: {
         user: {},
-       
-        oldTag: {},
-        oldTask: {},
+
     },
     mutations: {
         setUser(state, user) {
             state.user = user
         },
-        updateTask(state, index, task) {
-            state.user.tasks.splice(index, 1, task);
+        updateTask(state, data) {
+            state.user.tasks.splice(data.index, 1, data.task);
+        },
+        addTaskV(state, task) {
+            state.user.tasks.push(task);
         },
         deleteTask(state, index) {
             state.user.tasks.splice(index, 1);
         },
-        updateTag(state, index, tag) {
-            state.user.tags.splice(index, 1, tag);
+        updateTag(state, tag) {
+            function checkIndex(element) {
+                return element.id == tag.id;
+            }
+            state.user.tags.splice(state.user.tags.findIndex(checkIndex), 1, tag);
         },
-        deleteTag(state, index) {
-            state.user.tags.splice(index, 1);
+        addTag(state, tag) {
+            state.user.tags.push(tag);
+        },
+        deleteTag(state, tag) {
+            function checkIndex(element) {
+                return element.id == tag.id;
+            }
+            state.user.tags.splice(state.user.tags.findIndex(checkIndex), 1);
         },
         clearTagsFromTasks(state, index) {
             state.user.tasks = state.user.tasks.map(function (task) {
@@ -41,29 +51,16 @@ export default {
                 return task;
             });
         },
-        updateTaskFlag(state, taskId) {
-            console.log(state.user.tasks[taskId])
-            
+        updateTaskFlag(state, data) {
+            state.user.tasks[data.taskID].flag = data.flag
+
         },
-        setOldTag(state, tag) {
-            state.oldTag = tag
-        },
-        setOldTask(state, task) {
-            state.oldTask = task
-        },
-        setFlagTask(state, flag, index) {
-state.user.tasks[index].flag = flag
-        }
+       
+        
+
     },
     actions: {
-        async fetchOldTag(ctx, tag) {
-            const oldTag = tag
-            ctx.commit('setOldTag', oldTag)
-        },
-        async fetchOldTask(ctx, task) {
-            const oldTask = task
-            ctx.commit('setOldTask', oldTask)
-        },
+        
         async fetchTaskFlag(ctx, f, index) {
             const flag = f
             ctx.commit('setTaskFlag', flag, index)
@@ -86,14 +83,6 @@ state.user.tasks[index].flag = flag
         getTasks(state) {
             return state.user.tasks
         },
-        getOldTag(state) {
-            return state.oldTag
-        },
-        getOldTask(state) {
-            return state.oldTask
-        },
-        getTaskFlag(state, id = 0) {
-            return state.user.tasks[id].flag
-        }
+       
     }
 }

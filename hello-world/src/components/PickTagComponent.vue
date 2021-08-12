@@ -21,18 +21,13 @@
           <img class="tag__buttons-done-img" src="../assets/done.svg" />
         </button>
       </div>
-      <div class="tag__buttons-clear">
-        <button class="tag__buttons-clear-btn" v-on:click="editNo()">
-          <img class="tag__buttons-clear-img" src="../assets/clear.svg" />
-        </button>
-      </div>
+      
     </div>
   </div>
 </template>
 
 <script>
 import TagComponent from "./TagComponent.vue";
-import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   components: { TagComponent },
   name: "PicktagComponent",
@@ -41,7 +36,7 @@ export default {
       isDisable: true,
       col: this.tag.color,
       isEdit: true,
-      isEdited: true,
+      isEdited: true
     };
   },
   props: {
@@ -49,17 +44,15 @@ export default {
     choosenTag: Array,
   },
   async mounted() {
-    this.fetchOldTag(this.tag);
+    
+  
   },
   computed: {
-    ...mapGetters(["getOldTag"]),
     isActive() {
       return !!this.choosenTag.find((item) => item.id === this.tag.id);
     },
   },
   methods: {
-    ...mapMutations([]),
-    ...mapActions(["fetchOldTag"]),
     editTag() {
       this.isDisable = false;
       this.isEdit = false;
@@ -73,15 +66,6 @@ export default {
       this.isEdited = true;
       this.$emit("pushTag", {
         tag: this.tag,
-        isEdited: this.isEdited,
-      });
-      this.isEdit = true;
-    },
-    editNo() {
-      this.isDisable = true;
-      this.isEdited = true;
-      this.$emit("cancelTag", {
-        tag: this.getOldTag,
         isEdited: this.isEdited,
       });
       this.isEdit = true;

@@ -44,7 +44,6 @@
               @chooseTag="chooseTag"
               @deleteTag="deleteTag"
               @pushTag="pushTag"
-              @cancelTag="cancelTag"
               @editTag="editTag"
             ></pick-tag-component>
           </div>
@@ -79,7 +78,6 @@
         @delTask="delTask"
         @checked="checked"
         @pushTask="pushTask"
-        @cancelTask="cancelTask"
       ></task-component>
     </div>
   </div>
@@ -148,10 +146,12 @@ export default {
       "deleteTag",
       "clearTagsFromTasks",
       "changeTagsFromTasks",
-      "updateTaskFlag"
+      "updateTaskFlag",
+      "addTag",
+      "addTaskV"
     ]),
     pushTask(data) {
-      this.updateTask(data.index, data.task);
+      this.updateTask(data);
       // this.user.tasks = this.userTasks;
       // this.setUser(this.user);
     },
@@ -169,7 +169,8 @@ export default {
           tags: Object.values(this.choosenTag).map((i) => i),
           flag: false,
         };
-        this.updateTask(this.getTasks.length - 1, obj);
+        this.addTaskV(obj);
+        // this.updateTask(this.getTasks.length, obj);
         // this.user.tasks = this.userTasks;
         // this.setUser(this.user);
         this.task = "";
@@ -177,30 +178,23 @@ export default {
       } else {
         this.text__empty = true;
       }
+      
     },
     clearTask() {
       this.task = "";
       this.choosenTag = [];
     },
-    cancelTask(data) {
-      this.updateTask(data.index, data.task);
-      // this.user.tasks = this.userTasks;
-      // this.setUser(this.user);
-    },
+   
     createTag(data) {
-      this.updateTag(this.getTags.length - 1, data.tag);
+      // this.updateTag(data.tag.id, data.tag);
+      this.addTag(data.tag);
       // this.user.tags = this.userTags;
       // this.setUser(this.user);
     },
     editTag(data) {
       this.isEdited = data.isEdited;
     },
-    cancelTag(data) {
-      this.updateTag(data.tag.id, data.tag);
-      // this.user.tags = this.userTags;
-      // this.setUser(this.user);
-      this.isEdited = data.isEdited;
-    },
+    
     deleteTag(data) {
       function checkIndex(element) {
         return element.id == data.id;
@@ -214,9 +208,10 @@ export default {
     },
     pushTag(data) {
       function checkIndex(element) {
-        return element.id == data.tag.id;
+        return element == data.tag;
       }
-      this.updateTag(this.getTags.findIndex(checkIndex), data.tag);
+      console.log(this.getTags.findIndex(checkIndex));
+      this.updateTag( data.tag);
       this.clearTagsFromTasks(checkIndex, data.tag);
 
       // this.user.tasks = this.userTasks;
@@ -237,12 +232,10 @@ export default {
       this.toCreate = false;
     },
     checked(data) {
-      console.log(this.getTasks);
-      this.updateTaskFlag(data.taskID, data.flag);
+      this.updateTaskFlag(data);
       // this.setUser(this.user);
     },
     logout() {
-      this.updateUsers(this.getUser);
       this.setUser();
       this.$router.push({ path: "/" });
     },
@@ -270,6 +263,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .modal {
   &__off {
     display: flex;

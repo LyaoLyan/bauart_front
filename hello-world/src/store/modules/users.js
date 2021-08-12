@@ -3,6 +3,7 @@ import usersList from '../../assets/users.json'
 export default {
     state: {
         users: []
+     
     },
     mutations: {
         setUsers(state, users) {
@@ -13,7 +14,8 @@ export default {
         },
         addUsers(state, user) {
             state.users.push(user);
-        }
+        },
+        
         
 
     },
@@ -31,6 +33,9 @@ export default {
     getters: {
         getUsers(state) {
             return state.users
+        },
+        getNewId(state) {
+            return state.users[state.users.length-1].id+1
         }
     }
 }

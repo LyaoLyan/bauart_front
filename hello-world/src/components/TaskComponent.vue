@@ -40,11 +40,7 @@
           <img class="task__buttons-done-img" src="../assets/done.svg" />
         </button>
       </div>
-      <div class="task__buttons-clear">
-        <button class="task__buttons-clear-btn" v-on:click="editNo()">
-          <img class="task__buttons-clear-img" src="../assets/clear.svg" />
-        </button>
-      </div>
+      
     </div>
     <div class="task__tags">
       <tag-component
@@ -69,14 +65,14 @@ export default {
       flag: this.task.flag,
       isDisable: true,
       isEdit: true,
-      oldTask: JSON.parse(localStorage.getItem("currentUser")).tasks[
-        this.index
-      ],
+      
     };
   },
   props: {
     task: Object,
     index: Number,
+  },
+  computed: {
   },
   methods: {
     checked() {
@@ -107,15 +103,7 @@ export default {
         index: this.index,
       });
     },
-    editNo() {
-      this.isDisable = true;
-      this.isEdit = true;
-
-      this.$emit("cancelTask", {
-        task: this.oldTask,
-        index: this.index,
-      });
-    },
+    
   },
 };
 </script>
@@ -144,26 +132,25 @@ export default {
         opacity: 0;
       }
     }
-    
   }
   @media screen and (max-width: 320px) {
-      flex-direction: column;
-      &__buttons {
-        padding: 10px 0;
-        &-edit,
-    &-delete,
-    &-clear,
-    &-done {
-      &-btn {
-      }
-      &-img {
-        width: 12px;
-        height: 12px;
-        opacity: 0;
+    flex-direction: column;
+    &__buttons {
+      padding: 10px 0;
+      &-edit,
+      &-delete,
+      &-clear,
+      &-done {
+        &-btn {
+        }
+        &-img {
+          width: 12px;
+          height: 12px;
+          opacity: 0;
+        }
       }
     }
-      }
-    }
+  }
   &__flag {
     margin-right: 20px;
   }
